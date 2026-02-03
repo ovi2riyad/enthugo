@@ -1,0 +1,19 @@
+{
+  "name": "Enthugo (Laravel + Node)",
+  "image": "mcr.microsoft.com/devcontainers/php:1-8.3-bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": { "version": "20" }
+  },
+  "forwardPorts": [8000, 5173],
+  "postCreateCommand": "composer install && npm install",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "onecentlin.laravel-blade",
+        "bmewburn.vscode-intelephense-client",
+        "bradlc.vscode-tailwindcss",
+        "esbenp.prettier-vscode"
+      ]
+    }
+  }
+}
