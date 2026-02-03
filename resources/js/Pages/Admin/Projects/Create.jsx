@@ -10,13 +10,14 @@ export default function CreateProject() {
     description: '',
     stack: [],
     url: '',
+    image: null,
     is_featured: false,
     sort_order: 0,
   });
 
   const submit = (e) => {
     e.preventDefault();
-    post('/admin/projects');
+    post('/admin/projects', { forceFormData: true });
   };
 
   return (
@@ -24,79 +25,77 @@ export default function CreateProject() {
       <Head title="Create Project" />
       <h1 className="text-2xl font-semibold tracking-tight">Create Project</h1>
 
-      <ProjectForm
-        data={data}
-        setData={setData}
-        errors={errors}
-        processing={processing}
-        onSubmit={submit}
-      />
-    </AdminLayout>
-  );
-}
+      <form onSubmit={submit} className="mt-6 max-w-2xl space-y-4">
+        <Field label="Title" error={errors.title}>
+          <input className={inputCls} value={data.title} onChange={(e) => setData('title', e.target.value)} />
+        </Field>
 
-function ProjectForm({ data, setData, errors, processing, onSubmit }) {
-  return (
-    <form onSubmit={onSubmit} className="mt-6 max-w-2xl space-y-4">
-      <Field label="Title" error={errors.title}>
-        <input className={inputCls} value={data.title} onChange={(e) => setData('title', e.target.value)} />
-      </Field>
+        <Field label="Slug (optional)" error={errors.slug}>
+          <input className={inputCls} value={data.slug} onChange={(e) => setData('slug', e.target.value)} />
+        </Field>
 
-      <Field label="Slug (optional)" error={errors.slug}>
-        <input className={inputCls} value={data.slug} onChange={(e) => setData('slug', e.target.value)} />
-      </Field>
+        <Field label="Excerpt" error={errors.excerpt}>
+          <input className={inputCls} value={data.excerpt} onChange={(e) => setData('excerpt', e.target.value)} />
+        </Field>
 
-      <Field label="Excerpt" error={errors.excerpt}>
-        <input className={inputCls} value={data.excerpt} onChange={(e) => setData('excerpt', e.target.value)} />
-      </Field>
+        <Field label="Description" error={errors.description}>
+          <textarea className={textareaCls} value={data.description} onChange={(e) => setData('description', e.target.value)} />
+        </Field>
 
-      <Field label="Description" error={errors.description}>
-        <textarea className={textareaCls} value={data.description} onChange={(e) => setData('description', e.target.value)} />
-      </Field>
-
-      <Field label="Stack (comma separated)" error={errors.stack}>
-        <input
-          className={inputCls}
-          value={data.stack.join(', ')}
-          onChange={(e) =>
-            setData(
-              'stack',
-              e.target.value
-                .split(',')
-                .map((s) => s.trim())
-                .filter(Boolean)
-            )
-          }
-        />
-      </Field>
-
-      <Field label="URL" error={errors.url}>
-        <input className={inputCls} value={data.url} onChange={(e) => setData('url', e.target.value)} />
-      </Field>
-
-      <div className="flex flex-wrap items-center gap-4">
-        <label className="flex items-center gap-2 text-sm text-zinc-200">
+        <Field label="Stack (comma separated)" error={errors.stack}>
           <input
-            type="checkbox"
-            checked={data.is_featured}
-            onChange={(e) => setData('is_featured', e.target.checked)}
+            className={inputCls}
+            value={data.stack.join(', ')}
+            onChange={(e) =>
+              setData(
+                'stack',
+                e.target.value
+                  .split(',')
+                  .map((s) => s.trim())
+                  .filter(Boolean)
+              )
+            }
           />
-          Featured
-        </label>
+        </Field>
 
-        <div className="flex items-center gap-2 text-sm text-zinc-200">
-          <span>Sort</span>
+        <Field label="URL" error={errors.url}>
+          <input className={inputCls} value={data.url} onChange={(e) => setData('url', e.target.value)} />
+        </Field>
+
+        <Field label="Image (jpg/png/webp)" error={errors.image}>
           <input
-            type="number"
-            className="w-24 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm outline-none"
-            value={data.sort_order}
-            onChange={(e) => setData('sort_order', Number(e.target.value))}
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+            className="block w-full text-sm text-zinc-200"
+            onChange={(e) => setData('image', e.target.files?.[0] || null)}
           />
+          <div className="mt-2 text-xs text-zinc-500">Recommended: 1600×900</div>
+        </Field>
+
+        <div className="flex flex-wrap items-center gap-4">
+          <label className="flex items-center gap-2 text-sm text-zinc-200">
+            <input
+              type="checkbox"
+              checked={data.is_featured}
+              onChange={(e) => setData('is_featured', e.target.checked)}
+            />
+            Featured
+          </label>
+
+          <div className="flex items-center gap-2 text-sm text-zinc-200">
+            <span>Sort</span>
+            <input
+              type="number"
+              className="w-24 rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm outline-none"
+              value={data.sort_order}
+              onChange={(e) => setData('sort_order', Number(e.target.value))}
+            />
+          </div>
         </div>
-      </div>
 
-      <Button disabled={processing}>{processing ? 'Saving…' : 'Save'}</Button>
-    </form>
+        <Button disabled={processing}>{processing ? 'Saving…' : 'Save'}</Button>
+      </form>
+    </AdminLayout>
   );
 }
 

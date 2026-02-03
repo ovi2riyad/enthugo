@@ -14,7 +14,7 @@ class ProjectController extends Controller
             ->orderBy('sort_order')
             ->orderByDesc('id')
             ->get([
-                'id','title','slug','excerpt','stack','url','is_featured'
+                'id','title','slug','excerpt','stack','url','image_path','is_featured','sort_order'
             ]);
 
         return Inertia::render('Projects/Index', [

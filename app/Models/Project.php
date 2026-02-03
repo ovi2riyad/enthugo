@@ -13,6 +13,7 @@ class Project extends Model
         'description',
         'stack',
         'url',
+        'image_path',
         'is_featured',
         'sort_order',
     ];

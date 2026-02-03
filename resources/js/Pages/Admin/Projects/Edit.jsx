@@ -3,21 +3,27 @@ import { Head, useForm } from '@inertiajs/react';
 import Button from '@/Components/Button';
 
 export default function EditProject({ project }) {
-  const { data, setData, put, processing, errors } = useForm({
+  const { data, setData, post, processing, errors } = useForm({
     title: project.title || '',
     slug: project.slug || '',
     excerpt: project.excerpt || '',
     description: project.description || '',
     stack: project.stack || [],
     url: project.url || '',
+    image: null,
     is_featured: !!project.is_featured,
     sort_order: project.sort_order ?? 0,
   });
 
   const submit = (e) => {
     e.preventDefault();
-    put(`/admin/projects/${project.id}`);
+    post(`/admin/projects/${project.id}`, {
+      forceFormData: true,
+      data: { ...data, _method: 'PUT' },
+    });
   };
+
+  const currentImg = project.image_path ? `/storage/${project.image_path}` : null;
 
   return (
     <AdminLayout>
@@ -59,6 +65,23 @@ export default function EditProject({ project }) {
 
         <Field label="URL" error={errors.url}>
           <input className={inputCls} value={data.url} onChange={(e) => setData('url', e.target.value)} />
+        </Field>
+
+        <Field label="Current image">
+          {currentImg ? (
+            <img src={currentImg} alt="Current" className="mt-2 w-full max-w-sm rounded-2xl border border-white/10" />
+          ) : (
+            <div className="text-sm text-zinc-400">No image uploaded.</div>
+          )}
+        </Field>
+
+        <Field label="Replace image (optional)" error={errors.image}>
+          <input
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+            className="block w-full text-sm text-zinc-200"
+            onChange={(e) => setData('image', e.target.files?.[0] || null)}
+          />
         </Field>
 
         <div className="flex flex-wrap items-center gap-4">

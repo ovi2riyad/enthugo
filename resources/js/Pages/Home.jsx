@@ -1,9 +1,12 @@
 import AppLayout from '@/Layouts/AppLayout';
 import { Head, Link } from '@inertiajs/react';
 import ServicesSection from '@/Sections/ServicesSection';
+import AboutSection from '@/Sections/AboutSection';
+import FeaturedProjectsSection from '@/Sections/FeaturedProjectsSection';
+import CTASection from '@/Sections/CTASection';
 import Button from '@/Components/Button';
 
-export default function Home() {
+export default function Home({ featuredProjects = [] }) {
   return (
     <AppLayout>
       <Head title="Home" />
@@ -16,7 +19,7 @@ export default function Home() {
               Futuristic web experiences — clean, fast, and production-ready.
             </h1>
             <p className="mt-4 text-sm leading-relaxed text-zinc-300">
-              Laravel 12 + Inertia + React + Vite + Tailwind. Modular structure. No lag.
+              Laravel 12 + Inertia + React + Vite + Tailwind. Modular structure. Mobile-first. Smooth UI.
             </p>
 
             <div className="mt-6 flex flex-wrap gap-3">
@@ -31,7 +34,10 @@ export default function Home() {
         </div>
       </section>
 
+      <AboutSection />
+      <FeaturedProjectsSection projects={featuredProjects} />
       <ServicesSection />
+      <CTASection />
     </AppLayout>
   );
 }
